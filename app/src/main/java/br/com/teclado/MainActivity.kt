@@ -8,7 +8,9 @@ import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.Switch
 import android.widget.TextView
+import br.com.teclado.ime.KeyboardPreferences
 import br.com.teclado.update.ApkDownloader
 import br.com.teclado.update.SelfUpdateManager
 import br.com.teclado.update.UpdateChecker
@@ -31,6 +33,14 @@ class MainActivity : Activity() {
         }
         findViewById<Button>(R.id.select_keyboard).setOnClickListener {
             (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
+        }
+
+        val keyboardPreferences = KeyboardPreferences(applicationContext)
+        findViewById<Switch>(R.id.haptic_feedback).apply {
+            isChecked = keyboardPreferences.hapticEnabled
+            setOnCheckedChangeListener { _, enabled ->
+                keyboardPreferences.hapticEnabled = enabled
+            }
         }
 
         checkUpdateButton = findViewById(R.id.check_update)

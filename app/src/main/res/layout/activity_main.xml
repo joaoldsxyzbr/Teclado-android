@@ -81,11 +81,29 @@
             android:text="@string/select_keyboard"
             android:textAllCaps="false" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/keyboard_preferences"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/key_text" />
+
+        <Switch
+            android:id="@+id/haptic_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/haptic_feedback"
+            android:textSize="16sp"
+            android:textColor="@color/key_text" />
+
         <Button
             android:id="@+id/check_update"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             android:text="@string/check_update"
             android:textAllCaps="false" />
 

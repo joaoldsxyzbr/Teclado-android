@@ -8,6 +8,8 @@
     <string name="brand_logo_description">Logo do Teclado joaoldsxyzbr</string>
     <string name="enable_keyboard">Ativar teclado</string>
     <string name="select_keyboard">Selecionar teclado</string>
+    <string name="keyboard_preferences">Preferências do teclado</string>
+    <string name="haptic_feedback">Vibração ao tocar</string>
     <string name="check_update">Verificar atualização</string>
     <string name="update_checking">Verificando…</string>
     <string name="update_current">Você já está na versão mais recente.</string>
