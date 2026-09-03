@@ -3,9 +3,18 @@
     <string name="ime_name">Teclado joaoldsxyzbr</string>
     <string name="setup_title">Teclado joaoldsxyzbr</string>
     <string name="setup_subtitle">Português do Brasil, privado por padrão.</string>
-    <string name="setup_body">Este teclado funciona localmente, não solicita acesso à internet e não envia o que você digita para servidores.</string>
-    <string name="privacy_badge">Sem internet • sem telemetria • sem histórico</string>
+    <string name="setup_body">A digitação permanece local no aparelho. A internet é usada somente quando você toca em “Verificar atualização” para consultar e baixar uma Release oficial deste projeto no GitHub.</string>
+    <string name="privacy_badge">Digitação local • sem telemetria • sem histórico</string>
     <string name="brand_logo_description">Logo do Teclado joaoldsxyzbr</string>
     <string name="enable_keyboard">Ativar teclado</string>
     <string name="select_keyboard">Selecionar teclado</string>
+    <string name="check_update">Verificar atualização</string>
+    <string name="update_checking">Verificando…</string>
+    <string name="update_current">Você já está na versão mais recente.</string>
+    <string name="update_available">Nova versão %1$s disponível.</string>
+    <string name="update_downloading">Baixando atualização…</string>
+    <string name="update_verifying">Validando atualização…</string>
+    <string name="update_installing">Abrindo instalador…</string>
+    <string name="update_permission">Autorize “Instalar apps desconhecidos” e toque novamente.</string>
+    <string name="update_error">Não foi possível atualizar: %1$s</string>
 </resources>

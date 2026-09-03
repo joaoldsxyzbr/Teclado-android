@@ -80,5 +80,23 @@
             android:layout_marginTop="12dp"
             android:text="@string/select_keyboard"
             android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/check_update"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/check_update"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:id="@+id/update_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:textColor="@color/key_text"
+            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>
