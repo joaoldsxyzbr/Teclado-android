@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Teclado Privado</string>
+    <string name="ime_name">Teclado Privado PT-BR</string>
+    <string name="setup_title">Teclado Privado</string>
+    <string name="setup_body">Este teclado funciona localmente, não solicita acesso à internet e não envia o que você digita para servidores.</string>
+    <string name="enable_keyboard">Ativar teclado</string>
+    <string name="select_keyboard">Selecionar teclado</string>
+</resources>
