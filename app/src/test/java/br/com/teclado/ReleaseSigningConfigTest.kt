@@ -25,4 +25,11 @@ class ReleaseSigningConfigTest {
         assertTrue(workflow.contains("release-cert-sha256.txt"))
         assertTrue(workflow.contains("apksigner"))
     }
+
+    @Test
+    fun releaseCertificateParsingDoesNotDependOnExactApksignerPrefix() {
+        assertTrue(workflow.contains("CERT_OUTPUT=$($APKSIGNER verify --print-certs \"$APK\")"))
+        assertTrue(workflow.contains("grep -iE 'certificate.*sha-?256.*digest'"))
+        assertFalse(workflow.contains("sed -n 's/^Signer #1 certificate SHA-256 digest: //p'"))
+    }
 }
