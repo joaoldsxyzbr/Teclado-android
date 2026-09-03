@@ -7,8 +7,8 @@ import java.net.URL
 class ApkDownloader(
     private val context: Context,
     private val client: SafeHttpClient = SafeHttpClient()
-) {
-    fun download(release: ReleaseInfo): File {
+) : ApkSource {
+    override fun download(release: ReleaseInfo): File {
         val directory = File(context.cacheDir, "updates")
         check(directory.exists() || directory.mkdirs()) { "Could not create update cache" }
         directory.listFiles()?.forEach { it.delete() }
