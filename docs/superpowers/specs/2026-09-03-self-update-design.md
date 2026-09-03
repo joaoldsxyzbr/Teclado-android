@@ -7,7 +7,7 @@ Status: aprovado para planejamento
 
 Adicionar à tela principal do app um botão de atualização que consulte a Release mais recente do repositório `joaoldsxyzbr/Teclado-android`, compare a versão publicada com a versão instalada, baixe o APK oficial quando houver uma versão nova, valide a integridade do arquivo e abra o instalador padrão do Android.
 
-A instalação nunca será silenciosa: o Android continuará exigindo a confirmação do usuário e, quando necessário, a autorização “Instalar apps desconhecidos” para este app.
+A experiência será de um toque: `Verificar atualização` executa verificação, download e validação automaticamente quando houver uma versão nova. A única etapa manual obrigatória continuará sendo a confirmação do Package Installer do Android e, quando necessário, a autorização “Instalar apps desconhecidos” para este app.
 
 ## Escopo
 
@@ -36,7 +36,7 @@ Componentes planejados:
 2. O app consulta a API pública de Releases do GitHub.
 3. O app compara `versionName` instalado com `tag_name` da Release.
 4. Se não houver versão nova, mostra `Você já está na versão mais recente`.
-5. Se houver atualização, mostra versão disponível e inicia o download após a ação do usuário no mesmo fluxo.
+5. Se houver atualização, mostra brevemente a versão disponível e continua automaticamente para o download, sem exigir um segundo toque.
 6. O APK é salvo somente no cache privado do app.
 7. O SHA-256 do arquivo baixado é calculado e comparado ao digest da Release.
 8. Se a validação passar, o app abre o instalador do Android.
@@ -89,7 +89,7 @@ Falha de rede não altera o teclado nem bloqueia o app; o usuário poderá tenta
 
 Release sem APK compatível, digest ausente, checksum inválido, URL fora da whitelist ou resposta inválida serão tratados como falha segura: nenhum instalador será aberto.
 
-Se a permissão de instalação de fontes desconhecidas ainda não estiver concedida, o app abrirá a tela específica do Android para o usuário autorizar este aplicativo. Depois, o usuário poderá tocar novamente em atualizar/instalar.
+Se a permissão de instalação de fontes desconhecidas ainda não estiver concedida, o app abrirá a tela específica do Android para o usuário autorizar este aplicativo. Depois, o usuário poderá tocar novamente em `Verificar atualização`; se o APK já validado ainda estiver no cache, o fluxo poderá reutilizá-lo em vez de baixar novamente.
 
 ## Testes
 
@@ -104,13 +104,15 @@ Testes unitários deverão cobrir:
 
 O CI continuará executando `testDebugUnitTest` e `assembleDebug`, além da auditoria de privacidade revisada.
 
-## Versão e Release
+## Versão, Release e adoção inicial
 
 A implementação incrementará `versionCode` e `versionName`. Ao chegar à `main`, o workflow existente continuará criando automaticamente a nova GitHub Release e anexando o APK, que passa a ser a fonte consumida pelas futuras atualizações.
 
+A versão atualmente instalada (`v1.0.2`) não contém o atualizador e não consegue adicionar esse recurso a si mesma. Portanto, a primeira versão que incluir o botão deverá ser instalada manualmente a partir do GitHub uma única vez. A partir dela, as versões futuras poderão ser obtidas pelo próprio botão do app.
+
 ## Critérios de sucesso
 
-- O botão detecta corretamente quando existe uma Release mais nova.
+- Um único toque detecta corretamente quando existe uma Release mais nova e, havendo atualização, segue automaticamente para download e validação.
 - O APK oficial é baixado e validado por SHA-256.
 - O Package Installer do Android é aberto com o APK validado.
 - Nenhuma instalação silenciosa é tentada.
