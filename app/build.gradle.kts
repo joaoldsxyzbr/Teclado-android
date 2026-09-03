@@ -2,6 +2,14 @@ plugins {
     id("com.android.application")
 }
 
+val releaseKeystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+val releaseKeystorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+val releaseRequested = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
+
+if (releaseRequested && (releaseKeystorePath.isNullOrBlank() || releaseKeystorePassword.isNullOrBlank())) {
+    throw GradleException("Release signing credentials are required")
+}
+
 android {
     namespace = "br.com.teclado"
     compileSdk = 36
@@ -10,9 +18,28 @@ android {
         applicationId = "br.com.teclado"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.1.1"
+        versionCode = 6
+        versionName = "1.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            releaseKeystorePath?.takeIf { it.isNotBlank() }?.let { path ->
+                releaseKeystorePassword?.takeIf { it.isNotBlank() }?.let { password ->
+                    storeFile = file(path)
+                    storePassword = password
+                    keyAlias = "teclado"
+                    keyPassword = password
+                }
+            }
+        }
+    }
+
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
 
     compileOptions {
