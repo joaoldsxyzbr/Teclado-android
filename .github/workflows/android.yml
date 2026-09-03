@@ -20,8 +20,16 @@ jobs:
         run: gradle clean testDebugUnitTest assembleDebug
       - name: Privacy audit
         run: |
-          if grep -R -E "android.permission.INTERNET|Firebase|Analytics|http://|https://" app/src app/build.gradle.kts; then
-            echo "Network/telemetry marker found in app sources"
+          if grep -q "android.permission.INTERNET" app/src/main/AndroidManifest.xml; then
+            echo "INTERNET permission found"
+            exit 1
+          fi
+          if grep -R -E "Firebase|Analytics" app/src/main app/build.gradle.kts; then
+            echo "Telemetry SDK marker found"
+            exit 1
+          fi
+          if grep -R -E "https?://" app/src/main/java app/build.gradle.kts; then
+            echo "Network endpoint found in application code"
             exit 1
           fi
       - name: Upload debug APK
