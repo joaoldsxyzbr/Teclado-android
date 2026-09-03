@@ -25,17 +25,37 @@ jobs:
         run: gradle clean testDebugUnitTest assembleDebug
       - name: Privacy audit
         run: |
-          if grep -q "android.permission.INTERNET" app/src/main/AndroidManifest.xml; then
-            echo "INTERNET permission found"
+          if ! grep -q "android.permission.INTERNET" app/src/main/AndroidManifest.xml; then
+            echo "Updater requires INTERNET permission"
             exit 1
           fi
-          if grep -R -E "Firebase|Analytics" app/src/main app/build.gradle.kts; then
+          if ! grep -q "android.permission.REQUEST_INSTALL_PACKAGES" app/src/main/AndroidManifest.xml; then
+            echo "Updater requires REQUEST_INSTALL_PACKAGES permission"
+            exit 1
+          fi
+          if grep -R -E "Firebase|Analytics|Telemetry" app/src/main app/build.gradle.kts; then
             echo "Telemetry SDK marker found"
             exit 1
           fi
-          if grep -R -E "https?://" app/src/main/java app/build.gradle.kts; then
-            echo "Network endpoint found in application code"
+          if grep -R -E "HttpURLConnection|URLConnection|java\.net\.URL|https?://" app/src/main/java/br/com/teclado/ime; then
+            echo "Network access found inside IME code"
             exit 1
+          fi
+          if grep -R --include='*.kt' "http://" app/src/main/java; then
+            echo "Plain HTTP URL found in application code"
+            exit 1
+          fi
+          if grep -R --include='*.kt' --exclude-dir=update "https://" app/src/main/java/br/com/teclado; then
+            echo "HTTPS endpoint found outside updater package"
+            exit 1
+          fi
+          if [ -d app/src/main/java/br/com/teclado/update ]; then
+            while IFS= read -r url; do
+              case "$url" in
+                https://api.github.com/*|https://github.com/*|https://*.githubusercontent.com/*) ;;
+                *) echo "Disallowed updater endpoint: $url"; exit 1 ;;
+              esac
+            done < <(grep -RhoE 'https://[^"[:space:])}]+' app/src/main/java/br/com/teclado/update || true)
           fi
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
