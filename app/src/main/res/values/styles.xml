@@ -5,4 +5,11 @@
         <item name="android:navigationBarColor">@color/keyboard_background</item>
         <item name="android:colorAccent">@color/accent</item>
     </style>
+
+    <style name="Theme.Teclado.Launcher" parent="Theme.Teclado">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:statusBarColor">@color/brand_background</item>
+        <item name="android:navigationBarColor">@color/brand_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>

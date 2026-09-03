@@ -40,7 +40,7 @@ jobs:
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: teclado-privado-debug
+          name: teclado-joaoldsxyzbr-debug
           path: app/build/outputs/apk/debug/app-debug.apk
       - name: Publish version release
         if: github.ref == 'refs/heads/main'
@@ -54,7 +54,7 @@ jobs:
           fi
 
           TAG="v${VERSION}"
-          APK="teclado-privado-${TAG}.apk"
+          APK="teclado-joaoldsxyzbr-${TAG}.apk"
           cp app/build/outputs/apk/debug/app-debug.apk "$APK"
 
           if gh release view "$TAG" >/dev/null 2>&1; then
@@ -62,6 +62,6 @@ jobs:
           else
             gh release create "$TAG" "$APK" \
               --target "$GITHUB_SHA" \
-              --title "Teclado Privado $TAG" \
+              --title "Teclado joaoldsxyzbr $TAG" \
               --generate-notes
           fi

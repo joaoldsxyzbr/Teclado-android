@@ -10,6 +10,7 @@ import android.widget.Button
 
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_Teclado)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

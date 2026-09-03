@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.Teclado.Launcher" parent="Theme.Teclado">
+        <item name="android:windowSplashScreenBackground">@color/brand_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/brand_icon</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/brand_background</item>
+        <item name="android:statusBarColor">@color/brand_background</item>
+        <item name="android:navigationBarColor">@color/brand_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
