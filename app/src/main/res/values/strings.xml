@@ -10,6 +10,15 @@
     <string name="select_keyboard">Selecionar teclado</string>
     <string name="keyboard_preferences">Preferências do teclado</string>
     <string name="haptic_feedback">Vibração ao tocar</string>
+    <string name="toolbar_tools">Ferramentas locais</string>
+    <string name="toolbar_clipboard">Área de transferência local, sem histórico</string>
+    <string name="toolbar_translate_disabled">Tradução desativada para manter a digitação privada</string>
+    <string name="toolbar_settings">Configurações do teclado</string>
+    <string name="toolbar_voice_disabled">Voz desativada até existir um modo local confiável</string>
+    <string name="tools_emoji">☺ Emojis</string>
+    <string name="tools_clipboard">▤ Clipboard</string>
+    <string name="clipboard_empty">Clipboard vazio • o teclado não guarda histórico</string>
+    <string name="emoji_description">Emoji %1$s</string>
     <string name="check_update">Verificar atualização</string>
     <string name="update_checking">Verificando…</string>
     <string name="update_current">Você já está na versão mais recente.</string>
