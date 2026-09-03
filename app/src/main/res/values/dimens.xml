@@ -1,6 +1,7 @@
 <resources>
-    <dimen name="key_height">52dp</dimen>
+    <dimen name="key_height">58dp</dimen>
     <dimen name="key_margin">2dp</dimen>
     <dimen name="key_radius">7dp</dimen>
     <dimen name="keyboard_padding">4dp</dimen>
+    <dimen name="key_text_size">19sp</dimen>
 </resources>

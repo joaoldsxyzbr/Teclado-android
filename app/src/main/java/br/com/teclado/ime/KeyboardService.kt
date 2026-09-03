@@ -26,6 +26,8 @@ class KeyboardService : InputMethodService() {
 
     private fun handleAction(action: KeyboardAction) {
         val connection = currentInputConnection ?: return
+        val shiftWasEnabled = controller.shiftEnabled
+
         when (action) {
             is KeyboardAction.Accent -> controller.onAction(action)
             is KeyboardAction.Character -> {
@@ -55,6 +57,9 @@ class KeyboardService : InputMethodService() {
             }
             KeyboardAction.Shift, KeyboardAction.Symbols, KeyboardAction.Letters -> controller.onAction(action)
         }
-        renderKeyboard()
+
+        if (KeyboardRenderPolicy.shouldRenderAfter(action, shiftWasEnabled)) {
+            renderKeyboard()
+        }
     }
 }
