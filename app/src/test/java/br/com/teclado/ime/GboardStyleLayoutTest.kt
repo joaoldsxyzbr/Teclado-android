@@ -21,6 +21,15 @@ class GboardStyleLayoutTest {
     }
 
     @Test
+    fun primaryLettersUseStandardQwertyWithoutCedillaKey() {
+        val layout = KeyboardLayout.letters()
+        val homeRow = layout.rows[2]
+
+        assertEquals("asdfghjkl", homeRow.joinToString(separator = "") { it.label })
+        assertFalse(layout.rows.flatten().any { it.label == "ç" })
+    }
+
+    @Test
     fun bottomRowIncludesLocalEmojiShortcut() {
         val bottomRow = KeyboardLayout.letters().rows.last()
 
