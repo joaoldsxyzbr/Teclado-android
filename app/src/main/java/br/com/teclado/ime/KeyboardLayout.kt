@@ -14,14 +14,21 @@ sealed interface KeyboardAction {
     data class Accent(val value: Char) : KeyboardAction
 }
 
-data class KeyboardKey(val label: String, val action: KeyboardAction, val weight: Float = 1f)
+data class KeyboardKey(val label: String, val action: KeyboardAction?, val weight: Float = 1f) {
+    companion object {
+        fun spacer(weight: Float): KeyboardKey = KeyboardKey("", null, weight)
+    }
+}
+
 data class KeyboardLayout(val rows: List<List<KeyboardKey>>) {
     companion object {
         fun letters(): KeyboardLayout = KeyboardLayout(
             listOf(
                 "1234567890".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) },
                 "qwertyuiop".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) },
-                "asdfghjkl".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) },
+                listOf(KeyboardKey.spacer(0.5f)) +
+                    "asdfghjkl".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) } +
+                    KeyboardKey.spacer(0.5f),
                 listOf(KeyboardKey("⇧", KeyboardAction.Shift, 1.35f)) +
                     "zxcvbnm".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) } +
                     KeyboardKey("⌫", KeyboardAction.Backspace, 1.35f),

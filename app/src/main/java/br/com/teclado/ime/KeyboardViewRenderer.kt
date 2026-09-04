@@ -42,8 +42,22 @@ class KeyboardViewRenderer(private val context: Context) {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height)
             }
             row.forEach { key ->
+                val action = key.action
+                val params = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, key.weight).apply {
+                    if (action == null) {
+                        setMargins(0, margin, 0, margin)
+                    } else {
+                        setMargins(margin, margin, margin, margin)
+                    }
+                }
+
+                if (action == null) {
+                    rowView.addView(View(context), params)
+                    return@forEach
+                }
+
                 val label = when {
-                    key.action is KeyboardAction.Character && shiftEnabled && key.action.value.isLetter() -> key.label.uppercase()
+                    action is KeyboardAction.Character && shiftEnabled && action.value.isLetter() -> key.label.uppercase()
                     else -> key.label
                 }
                 val keyView = TextView(context).apply {
@@ -55,12 +69,12 @@ class KeyboardViewRenderer(private val context: Context) {
                     background = context.getDrawable(R.drawable.key_background)
                     isClickable = true
                     isFocusable = false
-                    setOnClickListener { onAction(key.action) }
+                    setOnClickListener { onAction(action) }
                 }
 
                 attachTouchBehavior(
                     view = keyView,
-                    action = key.action,
+                    action = action,
                     shiftEnabled = shiftEnabled,
                     keyHeight = height,
                     keyTextSize = keyTextSize,
@@ -68,9 +82,6 @@ class KeyboardViewRenderer(private val context: Context) {
                     onCursorMove = onCursorMove
                 )
 
-                val params = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, key.weight).apply {
-                    setMargins(margin, margin, margin, margin)
-                }
                 rowView.addView(keyView, params)
             }
             container.addView(rowView)
