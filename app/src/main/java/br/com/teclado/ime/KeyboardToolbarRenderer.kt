@@ -48,8 +48,8 @@ class KeyboardToolbarRenderer(private val context: Context) {
         container: LinearLayout,
         panel: KeyboardPanel,
         clipboardText: String?,
-        onPanelRequest: (KeyboardPanel) -> Unit,
-        onCommitText: (String) -> Unit
+        onCommitText: (String) -> Unit,
+        onEditorAction: (KeyboardEditorAction) -> Unit
     ) {
         container.removeAllViews()
         if (panel == KeyboardPanel.NONE) {
@@ -59,17 +59,6 @@ class KeyboardToolbarRenderer(private val context: Context) {
 
         container.visibility = View.VISIBLE
         when (panel) {
-            KeyboardPanel.TOOLS -> {
-                val row = panelRow()
-                addChip(row, context.getString(R.string.tools_emoji)) {
-                    onPanelRequest(KeyboardPanel.EMOJI)
-                }
-                addChip(row, context.getString(R.string.tools_clipboard)) {
-                    onPanelRequest(KeyboardPanel.CLIPBOARD)
-                }
-                container.addView(row)
-            }
-
             KeyboardPanel.CLIPBOARD -> {
                 val row = panelRow()
                 if (clipboardText.isNullOrBlank()) {
@@ -83,27 +72,41 @@ class KeyboardToolbarRenderer(private val context: Context) {
             }
 
             KeyboardPanel.EMOJI -> {
-                val scroll = HorizontalScrollView(context).apply {
-                    isHorizontalScrollBarEnabled = false
-                    overScrollMode = View.OVER_SCROLL_NEVER
-                }
+                val scroll = horizontalPanel()
                 val row = panelRow()
                 EmojiCatalog.common.forEach { emoji ->
                     addEmoji(row, emoji) { onCommitText(emoji) }
                 }
                 scroll.addView(row)
-                container.addView(
-                    scroll,
-                    LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                )
+                container.addView(scroll, fullWidthWrapContent())
+            }
+
+            KeyboardPanel.TEXT_EDIT -> {
+                val scroll = horizontalPanel()
+                val row = panelRow()
+                addChip(row, "←") { onEditorAction(KeyboardEditorAction.LEFT) }
+                addChip(row, "→") { onEditorAction(KeyboardEditorAction.RIGHT) }
+                addChip(row, context.getString(R.string.edit_select_all)) { onEditorAction(KeyboardEditorAction.SELECT_ALL) }
+                addChip(row, context.getString(R.string.edit_cut)) { onEditorAction(KeyboardEditorAction.CUT) }
+                addChip(row, context.getString(R.string.edit_copy)) { onEditorAction(KeyboardEditorAction.COPY) }
+                addChip(row, context.getString(R.string.edit_paste)) { onEditorAction(KeyboardEditorAction.PASTE) }
+                scroll.addView(row)
+                container.addView(scroll, fullWidthWrapContent())
             }
 
             KeyboardPanel.NONE -> Unit
         }
     }
+
+    private fun horizontalPanel(): HorizontalScrollView = HorizontalScrollView(context).apply {
+        isHorizontalScrollBarEnabled = false
+        overScrollMode = View.OVER_SCROLL_NEVER
+    }
+
+    private fun fullWidthWrapContent() = LinearLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
 
     private fun panelRow(): LinearLayout = LinearLayout(context).apply {
         orientation = LinearLayout.HORIZONTAL
@@ -188,10 +191,11 @@ class KeyboardToolbarRenderer(private val context: Context) {
     }
 
     private fun descriptionFor(action: KeyboardToolbarAction): String = when (action) {
-        KeyboardToolbarAction.TOOLS -> context.getString(R.string.toolbar_tools)
+        KeyboardToolbarAction.EMOJI -> context.getString(R.string.toolbar_emoji)
         KeyboardToolbarAction.CLIPBOARD -> context.getString(R.string.toolbar_clipboard)
-        KeyboardToolbarAction.TRANSLATE -> context.getString(R.string.toolbar_translate_disabled)
+        KeyboardToolbarAction.UNDO -> context.getString(R.string.toolbar_undo)
+        KeyboardToolbarAction.REDO -> context.getString(R.string.toolbar_redo)
+        KeyboardToolbarAction.TEXT_EDIT -> context.getString(R.string.toolbar_text_edit)
         KeyboardToolbarAction.SETTINGS -> context.getString(R.string.toolbar_settings)
-        KeyboardToolbarAction.VOICE -> context.getString(R.string.toolbar_voice_disabled)
     }
 }

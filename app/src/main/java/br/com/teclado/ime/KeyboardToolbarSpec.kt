@@ -1,25 +1,37 @@
 package br.com.teclado.ime
 
 enum class KeyboardToolbarAction {
-    TOOLS,
+    EMOJI,
     CLIPBOARD,
-    TRANSLATE,
-    SETTINGS,
-    VOICE
+    UNDO,
+    REDO,
+    TEXT_EDIT,
+    SETTINGS
 }
 
 enum class KeyboardToolbarDestination {
-    TOOLS_PANEL,
+    EMOJI_PANEL,
     CLIPBOARD_PANEL,
-    OPEN_SETTINGS,
-    DISABLED
+    UNDO,
+    REDO,
+    TEXT_EDIT_PANEL,
+    OPEN_SETTINGS
 }
 
 enum class KeyboardPanel {
     NONE,
-    TOOLS,
     CLIPBOARD,
-    EMOJI
+    EMOJI,
+    TEXT_EDIT
+}
+
+enum class KeyboardEditorAction {
+    LEFT,
+    RIGHT,
+    SELECT_ALL,
+    CUT,
+    COPY,
+    PASTE
 }
 
 data class KeyboardToolbarItem(
@@ -31,19 +43,21 @@ data class KeyboardToolbarItem(
 
 object KeyboardToolbarSpec {
     val items = listOf(
-        KeyboardToolbarItem(KeyboardToolbarAction.TOOLS, "▦", enabled = true, localOnly = true),
+        KeyboardToolbarItem(KeyboardToolbarAction.EMOJI, "☺", enabled = true, localOnly = true),
         KeyboardToolbarItem(KeyboardToolbarAction.CLIPBOARD, "▤", enabled = true, localOnly = true),
-        KeyboardToolbarItem(KeyboardToolbarAction.TRANSLATE, "文", enabled = false, localOnly = false),
-        KeyboardToolbarItem(KeyboardToolbarAction.SETTINGS, "⚙", enabled = true, localOnly = true),
-        KeyboardToolbarItem(KeyboardToolbarAction.VOICE, "🎤", enabled = false, localOnly = false)
+        KeyboardToolbarItem(KeyboardToolbarAction.UNDO, "↶", enabled = true, localOnly = true),
+        KeyboardToolbarItem(KeyboardToolbarAction.REDO, "↷", enabled = true, localOnly = true),
+        KeyboardToolbarItem(KeyboardToolbarAction.TEXT_EDIT, "↔", enabled = true, localOnly = true),
+        KeyboardToolbarItem(KeyboardToolbarAction.SETTINGS, "⚙", enabled = true, localOnly = true)
     )
 
     fun destination(action: KeyboardToolbarAction): KeyboardToolbarDestination = when (action) {
-        KeyboardToolbarAction.TOOLS -> KeyboardToolbarDestination.TOOLS_PANEL
+        KeyboardToolbarAction.EMOJI -> KeyboardToolbarDestination.EMOJI_PANEL
         KeyboardToolbarAction.CLIPBOARD -> KeyboardToolbarDestination.CLIPBOARD_PANEL
+        KeyboardToolbarAction.UNDO -> KeyboardToolbarDestination.UNDO
+        KeyboardToolbarAction.REDO -> KeyboardToolbarDestination.REDO
+        KeyboardToolbarAction.TEXT_EDIT -> KeyboardToolbarDestination.TEXT_EDIT_PANEL
         KeyboardToolbarAction.SETTINGS -> KeyboardToolbarDestination.OPEN_SETTINGS
-        KeyboardToolbarAction.TRANSLATE,
-        KeyboardToolbarAction.VOICE -> KeyboardToolbarDestination.DISABLED
     }
 }
 

@@ -56,27 +56,45 @@ class KeyboardService : InputMethodService() {
             container = target,
             panel = activePanel,
             clipboardText = if (activePanel == KeyboardPanel.CLIPBOARD) currentClipboardText() else null,
-            onPanelRequest = ::showPanel,
-            onCommitText = ::commitPanelText
+            onCommitText = ::commitPanelText,
+            onEditorAction = ::handleEditorAction
         )
     }
 
     private fun handleToolbarAction(action: KeyboardToolbarAction) {
         when (KeyboardToolbarSpec.destination(action)) {
-            KeyboardToolbarDestination.TOOLS_PANEL -> togglePanel(KeyboardPanel.TOOLS)
+            KeyboardToolbarDestination.EMOJI_PANEL -> togglePanel(KeyboardPanel.EMOJI)
             KeyboardToolbarDestination.CLIPBOARD_PANEL -> togglePanel(KeyboardPanel.CLIPBOARD)
+            KeyboardToolbarDestination.UNDO -> {
+                closePanel()
+                performEditorContextAction(android.R.id.undo)
+            }
+            KeyboardToolbarDestination.REDO -> {
+                closePanel()
+                performEditorContextAction(android.R.id.redo)
+            }
+            KeyboardToolbarDestination.TEXT_EDIT_PANEL -> togglePanel(KeyboardPanel.TEXT_EDIT)
             KeyboardToolbarDestination.OPEN_SETTINGS -> openSettings()
-            KeyboardToolbarDestination.DISABLED -> Unit
         }
+    }
+
+    private fun handleEditorAction(action: KeyboardEditorAction) {
+        when (action) {
+            KeyboardEditorAction.LEFT -> moveCursor(-1)
+            KeyboardEditorAction.RIGHT -> moveCursor(1)
+            KeyboardEditorAction.SELECT_ALL -> performEditorContextAction(android.R.id.selectAll)
+            KeyboardEditorAction.CUT -> performEditorContextAction(android.R.id.cut)
+            KeyboardEditorAction.COPY -> performEditorContextAction(android.R.id.copy)
+            KeyboardEditorAction.PASTE -> performEditorContextAction(android.R.id.paste)
+        }
+    }
+
+    private fun performEditorContextAction(id: Int) {
+        currentInputConnection?.performContextMenuAction(id)
     }
 
     private fun togglePanel(panel: KeyboardPanel) {
         activePanel = if (activePanel == panel) KeyboardPanel.NONE else panel
-        renderPanel()
-    }
-
-    private fun showPanel(panel: KeyboardPanel) {
-        activePanel = panel
         renderPanel()
     }
 
