@@ -24,7 +24,8 @@ class KeyboardViewRenderer(private val context: Context) {
         container: LinearLayout,
         layout: KeyboardLayout,
         shiftEnabled: Boolean,
-        onAction: (KeyboardAction) -> Unit
+        onAction: (KeyboardAction) -> Unit,
+        onCursorMove: (Int) -> Unit
     ) {
         container.removeAllViews()
         val margin = context.resources.getDimensionPixelSize(R.dimen.key_margin)
@@ -60,7 +61,8 @@ class KeyboardViewRenderer(private val context: Context) {
                     shiftEnabled = shiftEnabled,
                     keyHeight = height,
                     keyTextSize = keyTextSize,
-                    onAction = onAction
+                    onAction = onAction,
+                    onCursorMove = onCursorMove
                 )
 
                 val params = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, key.weight).apply {
@@ -78,9 +80,12 @@ class KeyboardViewRenderer(private val context: Context) {
         shiftEnabled: Boolean,
         keyHeight: Int,
         keyTextSize: Float,
-        onAction: (KeyboardAction) -> Unit
+        onAction: (KeyboardAction) -> Unit,
+        onCursorMove: (Int) -> Unit
     ) {
         when (action) {
+            KeyboardAction.Space -> attachSpacebarBehavior(view, onCursorMove)
+
             KeyboardAction.Backspace -> {
                 val session = KeyTouchSession(
                     scheduler = touchScheduler,
@@ -90,7 +95,14 @@ class KeyboardViewRenderer(private val context: Context) {
                     onLongPress = {},
                     onFeedback = { performHaptic(view) }
                 )
-                view.setOnTouchListener { _, event -> handleSessionTouch(view, event, session) }
+                view.setOnTouchListener { _, event ->
+                    when (event.actionMasked) {
+                        MotionEvent.ACTION_DOWN -> session.down()
+                        MotionEvent.ACTION_UP -> session.up()
+                        MotionEvent.ACTION_CANCEL -> session.cancel()
+                    }
+                    true
+                }
             }
 
             is KeyboardAction.Character -> {
@@ -118,6 +130,29 @@ class KeyboardViewRenderer(private val context: Context) {
             }
 
             else -> attachSimpleHaptic(view)
+        }
+    }
+
+    private fun attachSpacebarBehavior(view: TextView, onCursorMove: (Int) -> Unit) {
+        val stepPx = 24f * context.resources.displayMetrics.density
+        val tracker = SpaceCursorTracker(stepPx)
+
+        view.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    performHaptic(view)
+                    tracker.down(event.x)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val steps = tracker.move(event.x)
+                    if (steps != 0) onCursorMove(steps)
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (!tracker.up()) view.performClick()
+                }
+                MotionEvent.ACTION_CANCEL -> tracker.cancel()
+            }
+            true
         }
     }
 

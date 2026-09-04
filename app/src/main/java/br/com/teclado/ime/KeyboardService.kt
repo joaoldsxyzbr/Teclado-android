@@ -6,9 +6,11 @@ import android.content.Intent
 import android.inputmethodservice.InputMethodService
 import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.ExtractedTextRequest
 import android.widget.LinearLayout
 import br.com.teclado.MainActivity
 import br.com.teclado.R
+import kotlin.math.abs
 
 class KeyboardService : InputMethodService() {
     private val controller = KeyboardController()
@@ -34,7 +36,13 @@ class KeyboardService : InputMethodService() {
 
     private fun renderKeyboard() {
         val target = keyboardContainer ?: return
-        renderer.render(target, controller.layout(), controller.shiftEnabled, ::handleAction)
+        renderer.render(
+            target,
+            controller.layout(),
+            controller.shiftEnabled,
+            ::handleAction,
+            ::moveCursor
+        )
     }
 
     private fun renderToolbar() {
@@ -99,6 +107,30 @@ class KeyboardService : InputMethodService() {
             Intent(this, MainActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         )
+    }
+
+    private fun moveCursor(delta: Int) {
+        if (delta == 0) return
+        val connection = currentInputConnection ?: return
+        val extracted = connection.getExtractedText(ExtractedTextRequest(), 0)
+        val extractedText = extracted?.text
+
+        if (extracted != null && extractedText != null) {
+            val target = CursorSelectionPolicy.targetPosition(
+                extractedStartOffset = extracted.startOffset,
+                selectionEnd = extracted.selectionEnd,
+                extractedLength = extractedText.length,
+                delta = delta
+            )
+            connection.setSelection(target, target)
+            return
+        }
+
+        val keyCode = if (delta < 0) KeyEvent.KEYCODE_DPAD_LEFT else KeyEvent.KEYCODE_DPAD_RIGHT
+        repeat(abs(delta)) {
+            connection.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
+            connection.sendKeyEvent(KeyEvent(KeyEvent.ACTION_UP, keyCode))
+        }
     }
 
     private fun handleAction(action: KeyboardAction) {
