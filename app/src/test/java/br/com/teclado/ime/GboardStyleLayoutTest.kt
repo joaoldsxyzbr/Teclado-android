@@ -30,6 +30,17 @@ class GboardStyleLayoutTest {
     }
 
     @Test
+    fun homeRowKeepsHalfKeyInsetOnBothSides() {
+        val homeRow = KeyboardLayout.letters().rows[2]
+
+        assertEquals("", homeRow.first().label)
+        assertEquals(0.5, homeRow.first().weight.toDouble(), 0.001)
+        assertEquals("", homeRow.last().label)
+        assertEquals(0.5, homeRow.last().weight.toDouble(), 0.001)
+        assertEquals(10.0, homeRow.sumOf { it.weight.toDouble() }, 0.001)
+    }
+
+    @Test
     fun bottomRowIncludesLocalEmojiShortcut() {
         val bottomRow = KeyboardLayout.letters().rows.last()
 
