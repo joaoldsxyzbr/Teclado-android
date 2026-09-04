@@ -7,36 +7,50 @@ import org.junit.Test
 
 class KeyboardToolbarSpecTest {
     @Test
-    fun toolbarKeepsReferenceOrder() {
+    fun toolbarUsesModernLocalActionOrder() {
         assertEquals(
             listOf(
-                KeyboardToolbarAction.TOOLS,
+                KeyboardToolbarAction.EMOJI,
                 KeyboardToolbarAction.CLIPBOARD,
-                KeyboardToolbarAction.TRANSLATE,
-                KeyboardToolbarAction.SETTINGS,
-                KeyboardToolbarAction.VOICE
+                KeyboardToolbarAction.UNDO,
+                KeyboardToolbarAction.REDO,
+                KeyboardToolbarAction.TEXT_EDIT,
+                KeyboardToolbarAction.SETTINGS
             ),
             KeyboardToolbarSpec.items.map { it.action }
         )
     }
 
     @Test
-    fun onlyPrivateLocalToolbarActionsAreEnabled() {
-        val enabled = KeyboardToolbarSpec.items.filter { it.enabled }
-        val disabled = KeyboardToolbarSpec.items.filterNot { it.enabled }.map { it.action }.toSet()
-
-        assertTrue(enabled.isNotEmpty())
-        assertTrue(enabled.all { it.localOnly })
-        assertEquals(setOf(KeyboardToolbarAction.TRANSLATE, KeyboardToolbarAction.VOICE), disabled)
+    fun everyToolbarActionIsEnabledAndLocalOnly() {
+        assertTrue(KeyboardToolbarSpec.items.all { it.enabled })
+        assertTrue(KeyboardToolbarSpec.items.all { it.localOnly })
     }
 
     @Test
-    fun toolbarRoutesOnlyLocalDestinations() {
-        assertEquals(KeyboardToolbarDestination.TOOLS_PANEL, KeyboardToolbarSpec.destination(KeyboardToolbarAction.TOOLS))
+    fun toolbarRoutesToLocalEditorDestinations() {
+        assertEquals(KeyboardToolbarDestination.EMOJI_PANEL, KeyboardToolbarSpec.destination(KeyboardToolbarAction.EMOJI))
         assertEquals(KeyboardToolbarDestination.CLIPBOARD_PANEL, KeyboardToolbarSpec.destination(KeyboardToolbarAction.CLIPBOARD))
+        assertEquals(KeyboardToolbarDestination.UNDO, KeyboardToolbarSpec.destination(KeyboardToolbarAction.UNDO))
+        assertEquals(KeyboardToolbarDestination.REDO, KeyboardToolbarSpec.destination(KeyboardToolbarAction.REDO))
+        assertEquals(KeyboardToolbarDestination.TEXT_EDIT_PANEL, KeyboardToolbarSpec.destination(KeyboardToolbarAction.TEXT_EDIT))
         assertEquals(KeyboardToolbarDestination.OPEN_SETTINGS, KeyboardToolbarSpec.destination(KeyboardToolbarAction.SETTINGS))
-        assertEquals(KeyboardToolbarDestination.DISABLED, KeyboardToolbarSpec.destination(KeyboardToolbarAction.TRANSLATE))
-        assertEquals(KeyboardToolbarDestination.DISABLED, KeyboardToolbarSpec.destination(KeyboardToolbarAction.VOICE))
+    }
+
+    @Test
+    fun textEditPanelExposesCoreLocalEditorActions() {
+        assertTrue(KeyboardPanel.entries.contains(KeyboardPanel.TEXT_EDIT))
+        assertEquals(
+            listOf(
+                KeyboardEditorAction.LEFT,
+                KeyboardEditorAction.RIGHT,
+                KeyboardEditorAction.SELECT_ALL,
+                KeyboardEditorAction.CUT,
+                KeyboardEditorAction.COPY,
+                KeyboardEditorAction.PASTE
+            ),
+            KeyboardEditorAction.entries
+        )
     }
 
     @Test
