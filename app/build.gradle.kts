@@ -18,8 +18,8 @@ android {
         applicationId = "br.com.teclado"
         minSdk = 26
         targetSdk = 36
-        versionCode = 8
-        versionName = "1.3.0"
+        versionCode = 9
+        versionName = "1.4.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -54,5 +54,4 @@ dependencies {
     testImplementation("org.json:json:20250517")
     androidTestImplementation("androidx.test:core:1.7.0")
     androidTestImplementation("androidx.test:runner:1.7.0")
-    androidTestImplementation("androidx.test.ext:junit:1.3.0")
 }
