@@ -21,7 +21,7 @@ data class KeyboardLayout(val rows: List<List<KeyboardKey>>) {
             listOf(
                 "1234567890".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) },
                 "qwertyuiop".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) },
-                "asdfghjklç".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) },
+                "asdfghjkl".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) },
                 listOf(KeyboardKey("⇧", KeyboardAction.Shift, 1.35f)) +
                     "zxcvbnm".map { KeyboardKey(it.toString(), KeyboardAction.Character(it)) } +
                     KeyboardKey("⌫", KeyboardAction.Backspace, 1.35f),
